@@ -30,19 +30,6 @@ cd
 
 MYIP=$(wget -qO- ipv4.icanhazip.com);
 
-# check registered ip
-wget -q -O daftarip https://raw.githubusercontent.com/elhad/cstup/master/ip.txt
-if ! grep -w -q $MYIP daftarip; then
-	echo "Maaf, hanya IP yang terdaftar yang bisa menggunakan script ini!"
-	if [[ $vps = "FNS" ]]; then
-		echo "Powered by overses.net"
-	else
-		echo "Powered by overses.net"
-	fi
-	rm -f /root/daftarip
-	exit
-fi
-
 #https://github.com/adenvt/OcsPanels/wiki/tutor-debian
 
 clear
@@ -91,21 +78,21 @@ echo "$so1"
 chown -R mysql:mysql /var/lib/mysql/
 chmod -R 755 /var/lib/mysql/
 
-apt-get install -y nginx php5 php5-fpm php5-cli php5-mysql php5-mcrypt
+apt-get install -y nginx php5.6 php5.6-fpm php5.6-cli php5.6-mysql php5.6-mcrypt
 rm /etc/nginx/sites-enabled/default
 rm /etc/nginx/sites-available/default
 mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
 curl $source/ocs/nginx.conf > /etc/nginx/nginx.conf
 curl $source/ocs/vps.conf > /etc/nginx/conf.d/vps.conf
 sed -i 's/cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php5/fpm/php.ini
-sed -i 's/listen = \/var\/run\/php5-fpm.sock/listen = 127.0.0.1:9000/g' /etc/php5/fpm/pool.d/www.conf
+sed -i 's/listen = \/var\/run\/php5.6-fpm.sock/listen = 127.0.0.1:9000/g' /etc/php5.6/fpm/pool.d/www.conf
 
 useradd -m fns
 mkdir -p /home/fns/public_html
 echo "<?php phpinfo() ?>" > /home/fns/public_html/info.php
 chown -R www-data:www-data /home/fns/public_html
 chmod -R g+rw /home/fns/public_html
-service php5-fpm restart
+service php5.6-fpm restart
 service nginx restart
 
 apt-get -y install zip unzip
